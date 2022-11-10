@@ -1,0 +1,225 @@
+(C) - Create all tables with their respective attributes, data types, primary and foreign
+keys. Remember to properly map all relationships.
+*******************************************************************************
+PRAGMA foreign_keys = false;
+
+-- ----------------------------
+-- Table structure for buyer_bids
+-- ----------------------------
+DROP TABLE IF EXISTS "buyer_bids";
+CREATE TABLE "buyer_bids" (
+  "buyer_id" INTEGER NOT NULL,
+  "items_id" INTEGER NOT NULL,
+  "bid_price" REAL NOT NULL,
+  "bid_time" TEXT,
+  CONSTRAINT "buyer_id" FOREIGN KEY ("buyer_id") REFERENCES "members" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "items_id" FOREIGN KEY ("items_id") REFERENCES "items" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- ----------------------------
+-- Table structure for fallback
+-- ----------------------------
+DROP TABLE IF EXISTS "fallback";
+CREATE TABLE "fallback" (
+  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "buyer_id" INTEGER NOT NULL,
+  "seller_id" INTEGER NOT NULL,
+  "item_id" INTEGER NOT NULL,
+  "rate" integer,
+  "comment" TEXT,
+  "type" integer,
+  CONSTRAINT "buyer_id" FOREIGN KEY ("buyer_id") REFERENCES "members" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "seller_id" FOREIGN KEY ("seller_id") REFERENCES "members" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "item_id" FOREIGN KEY ("item_id") REFERENCES "members" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- ----------------------------
+-- Table structure for items
+-- ----------------------------
+DROP TABLE IF EXISTS "items";
+CREATE TABLE "items" (
+  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "seller_id" INTEGER NOT NULL,
+  "title" TEXT,
+  "description" TEXT,
+  "starting_bid_price" REAL,
+  "bidding_increment" integer,
+  "start_time" TEXT,
+  "end_time" TEXT,
+  "type_id" INTEGER NOT NULL,
+  CONSTRAINT "seller_id" FOREIGN KEY ("seller_id") REFERENCES "members" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "type_id" FOREIGN KEY ("type_id") REFERENCES "items_type" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- ----------------------------
+-- Table structure for items_type
+-- ----------------------------
+DROP TABLE IF EXISTS "items_type";
+CREATE TABLE "items_type" (
+  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "name" TEXT NOT NULL
+);
+
+-- ----------------------------
+-- Table structure for members
+-- ----------------------------
+DROP TABLE IF EXISTS "members";
+CREATE TABLE "members" (
+  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "email" TEXT,
+  "name" TEXT NOT NULL DEFAULT NULL,
+  "password" TEXT NOT NULL,
+  "home_address" TEXT,
+  "phone_number" INTEGER,
+  "bank_account_number" INTEGER,
+  "routing_number" INTEGER,
+  "shipping_address" TEXT,
+  "type" integer
+);
+
+-- ----------------------------
+-- Table structure for sqlite_sequence
+-- ----------------------------
+DROP TABLE IF EXISTS "sqlite_sequence";
+CREATE TABLE "sqlite_sequence" (
+  "name" ,
+  "seq" 
+);
+
+-- ----------------------------
+-- Auto increment value for fallback
+-- ----------------------------
+UPDATE "sqlite_sequence" SET seq = 16 WHERE name = 'fallback';
+
+-- ----------------------------
+-- Auto increment value for items
+-- ----------------------------
+UPDATE "sqlite_sequence" SET seq = 8 WHERE name = 'items';
+
+-- ----------------------------
+-- Auto increment value for items_type
+-- ----------------------------
+UPDATE "sqlite_sequence" SET seq = 2 WHERE name = 'items_type';
+
+-- ----------------------------
+-- Auto increment value for members
+-- ----------------------------
+UPDATE "sqlite_sequence" SET seq = 8 WHERE name = 'members';
+
+PRAGMA foreign_keys = true;
+*******************************************************************************
+(D) - Insert (populate) some data into your tables. Don't worry about the number of
+rows - you can play with a few members and items.
+*******************************************************************************
+-- ----------------------------
+-- Records of members
+-- ----------------------------
+INSERT INTO "members" VALUES (1, 'ajgkjg@gmail.com', 'bob', 'dykfyu', 'Baker Street 221B', 18754621548, 132113541236564, 12346, NULL, 0);
+INSERT INTO "members" VALUES (2, 'jgfjg@gmail.com', 'Alice', 'guigug', 'Douk Street 221B', 17961346461, 121348655456546, 84646, NULL, 0);
+INSERT INTO "members" VALUES (3, 'gituyfu@gmail.com', 'John', 'iudyudu', 'Baker Street 221B', 17542621548, 198713541236564, 35487, NULL, 0);
+INSERT INTO "members" VALUES (4, 'fgsfsdu@gmail.com', 'Alen', 'hfgddgd', 'Bank Street 2646B', 17685621548, 199993541236564, 34856, NULL, 0);
+INSERT INTO "members" VALUES (5, 'qqqdsada@gmail.com', 'John', 'gdggd', 'Baker Street 221B', 17552621548, NULL, NULL, 'Baker Street 221B', 1);
+INSERT INTO "members" VALUES (6, 'adsda@gmail.com', 'John', 'qweqweq', 'Rewqd Street 2313B', 18652621548, NULL, NULL, 'Rewqd Street 2313B', 1);
+INSERT INTO "members" VALUES (7, 'fsfssdf@gmail.com', 'John', 'qeadsda', 'Jdada Street 2313B', 17232621548, NULL, NULL, 'Rewqd Street 2313B', 1);
+INSERT INTO "members" VALUES (8, 'qwsda@gmail.com', 'John', 'sdsadadf', 'Rewqd Street 2313B', 15632621548, NULL, NULL, 'Rewqd Street 2313B', 1);
+-- ----------------------------
+-- Records of items_type
+-- ----------------------------
+INSERT INTO "items_type" VALUES (1, 'software');
+INSERT INTO "items_type" VALUES (2, 'hardware');
+-- ----------------------------
+-- Records of items
+-- ----------------------------
+INSERT INTO "items" VALUES (1, 1, 'dada', 'item1', 60.0, 2, '2022-11-08 14:17:17', '2022-11-09 14:17:17', 1);
+INSERT INTO "items" VALUES (2, 2, 'dadda', 'item2', 68.0, 3, '2022-11-04 14:17:17', '2022-11-09 14:17:17', 1);
+INSERT INTO "items" VALUES (3, 3, 'fasda', 'item3', 80.0, 6, '2022-11-10 14:17:17', '2022-11-11 14:17:17', 1);
+INSERT INTO "items" VALUES (4, 4, 'fsas', 'item4', 99.0, 5, '2022-11-08 14:17:17', '2022-11-09 14:17:17', 1);
+INSERT INTO "items" VALUES (5, 1, 'asada', 'item5', 23.0, 2, '2022-11-08 14:17:17', '2022-11-09 14:17:17', 1);
+INSERT INTO "items" VALUES (6, 2, 'dada', 'item6', 53.0, 4, '2022-11-08 14:17:17', '2022-11-09 14:17:17', 1);
+INSERT INTO "items" VALUES (7, 3, 'dada', 'item7', 70.0, 3, '2022-11-08 14:17:17', '2022-11-09 14:17:17', 2);
+INSERT INTO "items" VALUES (8, 4, 'adasd', 'item8', 100.0, 2, '2022-11-08 14:17:17', '2022-11-09 14:17:17', 2);
+-- ----------------------------
+-- Records of buyer_bids
+-- ----------------------------
+INSERT INTO "buyer_bids" VALUES (5, 1, 65.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (5, 2, 75.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (5, 3, 87.0, '2022-11-10 15:17:17');
+INSERT INTO "buyer_bids" VALUES (5, 4, 100.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (5, 5, 101.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (5, 6, 102.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (5, 7, 101.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (5, 8, 101.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (6, 1, 102.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (6, 2, 101.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (6, 3, 101.0, '2022-11-10 15:17:17');
+INSERT INTO "buyer_bids" VALUES (6, 4, 103.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (6, 5, 104.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (7, 5, 101.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (7, 6, 106.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (7, 7, 106.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (7, 8, 106.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (8, 2, 104.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (8, 4, 104.0, '2022-11-08 15:17:17');
+INSERT INTO "buyer_bids" VALUES (8, 5, 104.0, '2022-11-08 15:17:17');
+-- ----------------------------
+-- Records of fallback
+-- ----------------------------
+INSERT INTO "fallback" VALUES (1, 6, 1, 1, 6, 'good', 0);
+INSERT INTO "fallback" VALUES (2, 6, 3, 3, 7, 'good', 0);
+INSERT INTO "fallback" VALUES (3, 7, 2, 6, 8, 'good', 0);
+INSERT INTO "fallback" VALUES (4, 7, 3, 7, 7, 'good', 0);
+INSERT INTO "fallback" VALUES (5, 7, 4, 8, 8, 'good', 0);
+INSERT INTO "fallback" VALUES (6, 8, 2, 2, 9, 'great', 0);
+INSERT INTO "fallback" VALUES (7, 8, 4, 4, 8, 'good', 0);
+INSERT INTO "fallback" VALUES (8, 6, 1, 5, 7, 'good', 0);
+INSERT INTO "fallback" VALUES (9, 6, 1, 1, 7, 'good', 1);
+INSERT INTO "fallback" VALUES (10, 6, 3, 3, 7, 'good', 1);
+INSERT INTO "fallback" VALUES (11, 7, 2, 6, 7, 'good', 1);
+INSERT INTO "fallback" VALUES (12, 7, 3, 7, 7, 'good', 1);
+INSERT INTO "fallback" VALUES (13, 7, 4, 8, 9, 'good', 1);
+INSERT INTO "fallback" VALUES (14, 8, 2, 2, 9, 'great', 1);
+INSERT INTO "fallback" VALUES (15, 8, 4, 4, 7, 'good', 1);
+INSERT INTO "fallback" VALUES (16, 6, 1, 5, 7, 'good', 1);
+-- ----------------------------
+-- Records of sqlite_sequence
+-- ----------------------------
+INSERT INTO "sqlite_sequence" VALUES ('members', 8);
+INSERT INTO "sqlite_sequence" VALUES ('fallback', 16);
+INSERT INTO "sqlite_sequence" VALUES ('items_type', 2);
+INSERT INTO "sqlite_sequence" VALUES ('items', 8);
+***************************************************************************************
+(E) - List all members, with their corresponding data and whether each one is a buyer or
+a seller.
+***************************************************************************************
+select id,email,name,password,home_address,phone_number,bank_account_number,routing_number,shipping_address,(CASE WHEN type==0 THEN 'seller' WHEN type==1 THEN 'buyer' END) as identity
+from members;
+***************************************************************************************
+(F) - List all items, ordered by ascending starting bid price.
+***************************************************************************************
+select t1.id,t2.name as sellerName,t1.title,t1.description,t1.starting_bid_price,t1.bidding_increment,t1.start_time,t1.end_time,t3.name as classified
+from items t1
+left join members t2 on t1.seller_id=t2.id
+left join items_type t3 on t1.type_id=t3.id
+order by t1.starting_bid_price;
+***************************************************************************************
+(G) - List the seller who has earned the highest amount of money - take into
+consideration the number of items the seller has registered for all auctions and the
+difference between the start bid price and the final price.
+***************************************************************************************
+select seller_id,name,max(earned) as MaxEarned
+from (select t3.seller_id,t4.name,sum(t3.maxPrice-t3.starting_bid_price) as earned
+from (select t2.seller_id,t2.starting_bid_price,t1.maxPrice
+from items t2,(select items_id,max(bid_price) as maxPrice from buyer_bids group by items_id) t1
+where t2.id=t1.items_id) t3,members t4
+where t3.seller_id=t4.id
+group by t3.seller_id)
+***************************************************************************************
+(H) - List the buyer and the seller with the highest feedback score.
+select t1.seller_id,t2.name as maxRateSellerName,t1.sellerMaxRate
+from (select seller_id,rate as sellerMaxRate from fallback where rate = (select max(rate) as sellerMaxRate from fallback where type=0) and type=0) t1
+left join members t2 on t2.id=t1.seller_id
+***************************************************************************************
+select t1.buyer_id,t2.name as maxRateBuyerName,t1.buyerMaxRate
+from (select buyer_id,rate as buyerMaxRate from fallback where rate = (select max(rate) as buyerMaxRate from fallback where type=1) and type=1) t1
+left join members t2 on t2.id=t1.buyer_id
+***************************************************************************************
